@@ -1,31 +1,28 @@
-# Python
+# ----------------------------
+# Backend (FastAPI + Python)
+# ----------------------------
+
+# Python bytecode & cache
 __pycache__/
 *.py[cod]
 *.pyo
 *.pyd
-*.sqlite3
-
-# Virtualenv
-.venv/
-env/
-venv/
-*.egg-info/
-
-# Dev tools
 .pytest_cache/
 .mypy_cache/
 .coverage
+*.egg-info/
 
-# Editor/IDE
-.vscode/
-.idea/
-.devcontainer/   # 팀 전체 공유할 거면 제외하지 말고 유지
+# Virtualenv
+backend/.venv/
+backend/env/
+backend/venv/
 
-# Local data
-chroma_data/
-*.db
+# Local dev scripts
+backend/run.sh
 
-# Env
-.env
-*.pem
-*.key
+# Dev container settings (local only)
+backend/.devcontainer/
+
+# Database / Vector store local data
+backend/chroma_data/
+backend/*.db
