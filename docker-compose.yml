@@ -1,0 +1,51 @@
+version: "3.9"
+services:
+  db:
+    image: pgvector/pgvector:pg16
+    container_name: matpick-db
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
+    ports:
+      - "${POSTGRES_PORT}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data            # ← 영구 저장 (컨테이너 재시작 OK)
+      - ./db/init:/docker-entrypoint-initdb.d:ro   # ← 최초 부팅시 init SQL 자동 실행
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  api:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: matpick-api
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql+psycopg://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      UVICORN_PORT: ${API_PORT}
+    ports:
+      - "${API_PORT}:8000"
+    # 운영에선 소스 바인드 마운트 없이 이미지만 사용(개발용은 override에서 핫리로드)
+    command: >
+      uvicorn app.main:app --host 0.0.0.0 --port 8000 --workers 2
+
+  # (선택) pgAdmin: 브라우저로 DB 확인
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: matpick-pgadmin
+    environment:
+      PGADMIN_DEFAULT_EMAIL: ${PGADMIN_EMAIL}
+      PGADMIN_DEFAULT_PASSWORD: ${PGADMIN_PASSWORD}
+    ports:
+      - "5050:80"
+    depends_on:
+      - db
+
+volumes:
+  pgdata:

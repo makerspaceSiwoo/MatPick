@@ -1,0 +1,28 @@
+# ----------------------------
+# Backend (FastAPI + Python)
+# ----------------------------
+
+# Python bytecode & cache
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.coverage
+*.egg-info/
+
+# Virtualenv
+backend/.venv/
+backend/env/
+backend/venv/
+
+# Local dev scripts
+backend/run.sh
+
+# Dev container settings (local only)
+backend/.devcontainer/
+
+# Database / Vector store local data
+backend/chroma_data/
+backend/*.db

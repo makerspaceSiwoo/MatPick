@@ -1,28 +1,57 @@
-# ----------------------------
-# Backend (FastAPI + Python)
-# ----------------------------
+# ----- OS / Editor -----
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
 
-# Python bytecode & cache
+# ----- Env / Secrets -----
+.env
+.env.*         # e.g., .env.local, .env.dev
+.env.local
+.env.development
+.env.production
+config.ini
+secrets.json
+
+# ----- Python -----
 __pycache__/
-*.py[cod]
+*.pyc
 *.pyo
 *.pyd
-.pytest_cache/
-.mypy_cache/
-.coverage
 *.egg-info/
+.venv/
+venv/
+.python-version
+.mypy_cache/
+.pytest_cache/
+.ruff_cache/
+.ipynb_checkpoints/
 
-# Virtualenv
-backend/.venv/
-backend/env/
-backend/venv/
+# ----- Docker / Compose (로컬 산출물) -----
+# Compose는 named volume 사용하므로 디렉터리 생기지 않지만,
+# 혹시 로컬 바인드 마운트나 임시 파일을 쓸 경우 대비
+docker-data/
+*.log
 
-# Local dev scripts
-backend/run.sh
+# ----- 로컬 개발 스크립트 및 데이터 -----
+run.sh
+data/
+*.pdf
+*.csv
+*.json
 
-# Dev container settings (local only)
-backend/.devcontainer/
+# ----- Backups / Dumps -----
+backup_*.sql
+*.dump
+*.sql.gz
 
-# Database / Vector store local data
-backend/chroma_data/
-backend/*.db
+# ----- Frontend(추가될 경우 대비) -----
+node_modules/
+.npm/
+.pnpm-store/
+.yarn/
+.next/
+dist/
+build/
+coverage/

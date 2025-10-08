@@ -1,0 +1,52 @@
+# 기본 설정
+COMPOSE := docker compose
+API_PORT ?= 8000
+DB_SVC   ?= matpick-db
+DB_USER  ?= matpick
+DB_NAME  ?= matpick
+
+## 컨테이너 빌드+실행
+up:
+	$(COMPOSE) up -d --build
+
+## 컨테이너 중지(데이터 유지)
+down:
+	$(COMPOSE) down
+
+## 재시작
+restart:
+	$(COMPOSE) restart
+
+## 상태 확인
+ps:
+	$(COMPOSE) ps
+
+## 로그 팔로우 (api/db/전체)
+logs:
+	$(COMPOSE) logs -f
+logs-api:
+	$(COMPOSE) logs -f api
+logs-db:
+	$(COMPOSE) logs -f db
+
+## 헬스체크 엔드포인트 호출
+health:
+	curl -s http://localhost:$(API_PORT)/health | jq .
+
+## psql 셸 접속
+psql:
+	docker exec -it $(DB_SVC) psql -U $(DB_USER) -d $(DB_NAME)
+
+## DB 백업 (backup_YYYY-MM-DD.sql 생성)
+backup:
+	docker exec -t $(DB_SVC) pg_dump -U $(DB_USER) $(DB_NAME) > backup_$$(date +%F).sql
+	@echo "생성: backup_$$(date +%F).sql"
+
+## DB 복원 (사용: make restore FILE=backup_2025-10-05.sql)
+restore:
+	@if [ -z "$(FILE)" ]; then echo "사용법: make restore FILE=backup.sql"; exit 1; fi
+	cat $(FILE) | docker exec -i $(DB_SVC) psql -U $(DB_USER) -d $(DB_NAME)
+
+## (주의) 컨테이너+볼륨 전부 제거 (데이터 삭제)
+wipe:
+	$(COMPOSE) down -v

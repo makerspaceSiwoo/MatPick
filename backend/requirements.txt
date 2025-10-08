@@ -1,4 +1,8 @@
 fastapi
 uvicorn[standard]
+SQLAlchemy>=2
+psycopg[binary]
+pgvector
 pydantic
-chromadb
+python-dotenv
+pdfplumber
